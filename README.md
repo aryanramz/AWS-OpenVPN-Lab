@@ -110,6 +110,7 @@ The screenshots below are redacted to hide public IP addresses, public DNS names
 | [`docs/security-considerations.md`](docs/security-considerations.md) | Security risks, redaction rules, and hardening notes |
 | [`docs/troubleshooting.md`](docs/troubleshooting.md) | Common issues and fixes |
 | [`docs/future-improvements.md`](docs/future-improvements.md) | Ways to improve the lab beyond the tutorial |
+| [`docs/lessons-learned.md`](docs/lessons-learned.md) | Reflection on AWS setup, networking, SSH troubleshooting, and security takeaways |
 | [`diagrams/architecture.md`](diagrams/architecture.md) | Text-based architecture diagram |
 | [`screenshots/`](screenshots/) | Redacted screenshots showing lab evidence |
 
@@ -137,6 +138,7 @@ Through this lab, I learned how to:
 - Understand the difference between the Linux `openvpnas` user and the OpenVPN `openvpn` admin user
 - Route client internet traffic through the VPN
 - Verify VPN functionality through public IP testing
+- Troubleshoot Windows SSH private key permission errors
 - Identify security risks related to exposed admin portals and cloud firewall rules
 
 ## Future Improvements
