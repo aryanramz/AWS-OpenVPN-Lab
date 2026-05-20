@@ -22,11 +22,46 @@ The Marketplace page showed the BYOL option, which allows free usage for two con
 
 ## 4. Choose Instance Type
 
-A small EC2 instance type was used for this lab. The tutorial showed a small general-purpose instance suitable for testing.
+The instance type used for this lab was:
 
-For a personal lab, a small instance is enough because the goal is not production-scale performance.
+```txt
+t3.small
+```
 
-## 5. Create SSH Key Pair
+This instance type was selected because it provides enough resources for a personal OpenVPN lab without being intended for production-scale VPN usage.
+
+## 5. Configure Network Settings and Security Group Rules
+
+During the EC2 launch process, the network settings section was used to configure the instance's cloud network and firewall behavior.
+
+The network settings included:
+
+- Selecting the AWS VPC for the instance
+- Using a default subnet selection
+- Enabling auto-assignment of a public IP address
+- Creating a new security group for the VPN server
+- Configuring inbound traffic rules for SSH, HTTPS, the OpenVPN web portal, and OpenVPN tunnel traffic
+
+Auto-assigning a public IP was required so the VPN server could be reached from the internet.
+
+The security group acted as the instance-level firewall. The inbound rules configured for this lab were:
+
+| Purpose | Type | Protocol | Port | Source |
+|---|---|---|---:|---|
+| SSH administration | SSH | TCP | 22 | My IP only |
+| HTTPS access | HTTPS | TCP | 443 | Anywhere |
+| OpenVPN web/admin portal | Custom TCP | TCP | 943 | My IP only |
+| OpenVPN tunnel traffic | Custom UDP | UDP | 1194 | My IP only |
+
+The source IP for SSH, the OpenVPN admin portal, and OpenVPN UDP traffic was restricted to `My IP` instead of being left fully open to the internet. This reduced unnecessary exposure while still allowing the local machine to administer and connect to the server.
+
+Security note:
+
+```txt
+Do not publish the actual home IP address, public DNS name, or AWS account details in GitHub screenshots or documentation.
+```
+
+## 6. Create SSH Key Pair
 
 An SSH key pair was created and downloaded as a `.pem` file.
 
@@ -38,13 +73,13 @@ Security note:
 The .pem file should never be uploaded to GitHub.
 ```
 
-## 6. Launch the EC2 Instance
+## 7. Launch the EC2 Instance
 
-After selecting the AMI, instance type, and key pair, the EC2 instance was launched.
+After selecting the AMI, instance type, network settings, security group rules, and key pair, the EC2 instance was launched.
 
 Once the instance passed its status checks, the public DNS address was used for SSH access.
 
-## 7. SSH Into the Server
+## 8. SSH Into the Server
 
 PowerShell was used to connect to the EC2 instance with SSH.
 
@@ -56,7 +91,7 @@ ssh -i "vpnserver.pem" root@<ec2-public-dns>
 
 The actual public DNS should not be published in the repository.
 
-## 8. Accept OpenVPN License Agreement
+## 9. Accept OpenVPN License Agreement
 
 After connecting to the instance, OpenVPN Access Server displayed its license agreement.
 
@@ -66,13 +101,13 @@ The agreement was accepted by typing:
 yes
 ```
 
-## 9. Complete Initial OpenVPN Setup
+## 10. Complete Initial OpenVPN Setup
 
 The OpenVPN Access Server setup wizard asked a series of configuration questions. The lab used mostly default settings.
 
 The setup initialized the OpenVPN Access Server service and generated the Admin UI and Client UI URLs.
 
-## 10. Reconnect as `openvpnas`
+## 11. Reconnect as `openvpnas`
 
 After initial setup, the system instructed the user to log in as:
 
@@ -82,7 +117,7 @@ openvpnas
 
 This is the Linux user used to administer the OpenVPN Access Server instance.
 
-## 11. Set the OpenVPN Admin Password
+## 12. Set the OpenVPN Admin Password
 
 After reconnecting as `openvpnas`, the OpenVPN admin password was set using:
 
@@ -96,7 +131,7 @@ This sets the password for the OpenVPN Admin UI user:
 openvpn
 ```
 
-## 12. Log Into the Admin UI
+## 13. Log Into the Admin UI
 
 The Admin UI was accessed in the browser using:
 
@@ -111,7 +146,7 @@ Username: openvpn
 Password: password created with sudo passwd openvpn
 ```
 
-## 13. Configure VPN Routing
+## 14. Configure VPN Routing
 
 Inside the Admin UI, the lab went to:
 
@@ -133,7 +168,7 @@ Yes, using NAT
 
 This allows client internet traffic to route through the VPN server.
 
-## 14. Update the Running Server
+## 15. Update the Running Server
 
 After saving the VPN routing setting, the OpenVPN Admin UI required the running server to be updated.
 
@@ -143,7 +178,7 @@ The lab clicked:
 Update Running Server
 ```
 
-## 15. Log Into the Client Portal
+## 16. Log Into the Client Portal
 
 The OpenVPN user portal was accessed at:
 
@@ -153,13 +188,13 @@ https://<public-ip>:943/
 
 The same `openvpn` user credentials were used.
 
-## 16. Connect Using OpenVPN Connect
+## 17. Connect Using OpenVPN Connect
 
 OpenVPN Connect was used as the VPN client.
 
 The profile was added/imported, and the client connected to the AWS-hosted OpenVPN server.
 
-## 17. Verify the VPN
+## 18. Verify the VPN
 
 The VPN connection was verified by searching:
 
