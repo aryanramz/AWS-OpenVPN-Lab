@@ -1,0 +1,24 @@
+```gitignore
+# AWS keys and credentials
+*.pem
+*.key
+*.pub
+.env
+credentials/
+secrets/
+
+# OpenVPN sensitive files
+*.ovpn
+*.crt
+*.csr
+*.conf
+*.p12
+*.pfx
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
