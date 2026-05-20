@@ -1,4 +1,3 @@
-```gitignore
 # AWS keys and credentials
 *.pem
 *.key
