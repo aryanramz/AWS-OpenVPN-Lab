@@ -83,17 +83,25 @@ Once the instance passed its status checks, the public DNS address was used for 
 
 PowerShell was used to connect to the EC2 instance with SSH.
 
-The command followed this general structure:
+The first SSH attempt used the `root` user:
 
 ```bash
-ssh -i "vpnserver.pem" root@<ec2-public-dns>
+ssh -i "<key-pair>.pem" root@<ec2-public-dns>
 ```
 
-The actual public DNS should not be published in the repository.
+The server rejected direct root login and instructed that the instance should be accessed as the `openvpnas` user instead.
+
+The correct SSH command followed this structure:
+
+```bash
+ssh -i "<key-pair>.pem" openvpnas@<ec2-public-dns>
+```
+
+The actual key file name, public DNS, and public IP address should not be published in the repository.
 
 ## 9. Accept OpenVPN License Agreement
 
-After connecting to the instance, OpenVPN Access Server displayed its license agreement.
+After connecting as `openvpnas`, the OpenVPN Access Server Initial Configuration Tool displayed the End User License Agreement.
 
 The agreement was accepted by typing:
 
@@ -103,35 +111,61 @@ yes
 
 ## 10. Complete Initial OpenVPN Setup
 
-The OpenVPN Access Server setup wizard asked a series of configuration questions. The lab used mostly default settings.
+The OpenVPN Access Server Initial Configuration Tool asked several setup questions. The lab used mostly default settings, except for enabling VPN client internet traffic routing.
 
-The setup initialized the OpenVPN Access Server service and generated the Admin UI and Client UI URLs.
+The main setup choices were:
 
-## 11. Reconnect as `openvpnas`
+| Setting | Selection Used |
+|---|---|
+| Primary Access Server node | Default: yes |
+| Admin Web UI network interface | Default: all interfaces, `0.0.0.0` |
+| OpenVPN CA algorithm | Default: `secp384r1` |
+| Self-signed web certificate algorithm | Default: `secp384r1` |
+| Admin Web UI port | Default: `943` |
+| OpenVPN daemon TCP port | Default: `443` |
+| Route client traffic through VPN | `yes` |
+| Route client DNS traffic through VPN | Default: no |
+| Allow private subnets to be accessible to clients | EC2 default: yes |
+| Admin authentication method | Local |
+| Admin UI username | `openvpn` |
+| Activation key | Left blank to specify later |
 
-After initial setup, the system instructed the user to log in as:
+During this setup process, the password for the `openvpn` Admin UI account was created directly inside the configuration wizard.
+
+The password had to meet OpenVPN's complexity requirements:
 
 ```txt
-openvpnas
+At least 8 characters, including a digit, an uppercase letter, and a symbol.
 ```
 
-This is the Linux user used to administer the OpenVPN Access Server instance.
+This means the admin password was not created with `sudo passwd openvpn` in this lab. It was created during the Initial Configuration Tool flow.
 
-## 12. Set the OpenVPN Admin Password
+## 11. Finish OpenVPN Initialization
 
-After reconnecting as `openvpnas`, the OpenVPN admin password was set using:
+After the setup choices were submitted, OpenVPN initialized the server.
 
-```bash
-sudo passwd openvpn
-```
+The setup process performed actions such as:
 
-This sets the password for the OpenVPN Admin UI user:
+- Initializing OpenVPN Access Server
+- Writing the configuration file
+- Creating the default profile
+- Adding the `openvpn` admin user
+- Setting the admin password in the OpenVPN database
+- Preparing web certificates
+- Enabling and starting the OpenVPN Access Server service
+
+After initialization completed, the setup tool displayed the Admin UI and Client UI URLs.
+
+The URLs followed this general structure:
 
 ```txt
-openvpn
+Admin UI:  https://<public-ip>:943/admin
+Client UI: https://<public-ip>:943/
 ```
 
-## 13. Log Into the Admin UI
+The actual public IP address should not be published in the repository.
+
+## 12. Log Into the Admin UI
 
 The Admin UI was accessed in the browser using:
 
@@ -143,42 +177,26 @@ The login used:
 
 ```txt
 Username: openvpn
-Password: password created with sudo passwd openvpn
+Password: password created during the Initial Configuration Tool setup
 ```
 
-## 14. Configure VPN Routing
+## 13. Confirm VPN Routing Settings
 
-Inside the Admin UI, the lab went to:
+Client internet traffic routing was enabled during the Initial Configuration Tool setup by answering `yes` to:
+
+```txt
+Should client traffic be routed by default through the VPN?
+```
+
+This allows client internet traffic to route through the AWS-hosted VPN server.
+
+If this setting needs to be checked or changed later, it can be reviewed in the Admin UI under:
 
 ```txt
 Configuration -> VPN Settings
 ```
 
-The setting changed was:
-
-```txt
-Should client Internet traffic be routed through the VPN?
-```
-
-The selected option was:
-
-```txt
-Yes, using NAT
-```
-
-This allows client internet traffic to route through the VPN server.
-
-## 15. Update the Running Server
-
-After saving the VPN routing setting, the OpenVPN Admin UI required the running server to be updated.
-
-The lab clicked:
-
-```txt
-Update Running Server
-```
-
-## 16. Log Into the Client Portal
+## 14. Log Into the Client Portal
 
 The OpenVPN user portal was accessed at:
 
@@ -188,13 +206,13 @@ https://<public-ip>:943/
 
 The same `openvpn` user credentials were used.
 
-## 17. Connect Using OpenVPN Connect
+## 15. Connect Using OpenVPN Connect
 
 OpenVPN Connect was used as the VPN client.
 
 The profile was added/imported, and the client connected to the AWS-hosted OpenVPN server.
 
-## 18. Verify the VPN
+## 16. Verify the VPN
 
 The VPN connection was verified by searching:
 
