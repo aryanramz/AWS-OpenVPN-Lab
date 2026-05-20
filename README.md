@@ -47,19 +47,18 @@ For a fuller diagram, see [`diagrams/architecture.md`](diagrams/architecture.md)
 2. Launched a new EC2 instance.
 3. Selected the OpenVPN Access Server AMI from AWS Marketplace.
 4. Used the OpenVPN BYOL option with free access for two connected devices.
-5. Selected a small EC2 instance type for the lab environment.
-6. Created and downloaded an SSH key pair.
-7. Connected to the server through PowerShell using SSH.
-8. Accepted the OpenVPN Access Server license agreement.
-9. Completed the initial OpenVPN Access Server configuration.
-10. Reconnected as the `openvpnas` Linux user.
-11. Set the OpenVPN admin password for the `openvpn` user.
+5. Selected the `t3.small` instance type for the lab environment.
+6. Configured network settings, including VPC, subnet, public IP assignment, and security group inbound rules.
+7. Created and downloaded an SSH key pair.
+8. Connected to the server through PowerShell using SSH.
+9. Accepted the OpenVPN Access Server license agreement.
+10. Completed the OpenVPN Initial Configuration Tool setup.
+11. Created the `openvpn` Admin UI password during the initial setup process.
 12. Logged into the OpenVPN Admin UI.
-13. Enabled routing of client internet traffic through the VPN using NAT.
-14. Updated the running OpenVPN server.
-15. Logged into the OpenVPN user portal.
-16. Used OpenVPN Connect to connect to the VPN profile.
-17. Verified VPN functionality by checking that the public IP address changed.
+13. Enabled routing of client internet traffic through the VPN.
+14. Logged into the OpenVPN client portal.
+15. Used OpenVPN Connect to connect to the VPN profile.
+16. Verified VPN functionality by checking that the public IP address changed to an AWS-hosted endpoint.
 
 ## Important Ports
 
@@ -69,6 +68,38 @@ For a fuller diagram, see [`diagrams/architecture.md`](diagrams/architecture.md)
 | OpenVPN web/admin portal | TCP | 943 |
 | HTTPS VPN access | TCP | 443 |
 | OpenVPN tunnel traffic | UDP | 1194 |
+
+## Screenshots
+
+The screenshots below are redacted to hide public IP addresses, public DNS names, AWS resource IDs, key pair names, and other sensitive details.
+
+### AWS Marketplace AMI Selection
+
+![AWS Marketplace AMI Selection](screenshots/marketplace-ami-redacted.png)
+
+### EC2 Instance Running
+
+![EC2 Instance Running](screenshots/ec2-instance-redacted.png)
+
+### Security Group Inbound Rules
+
+![Security Group Inbound Rules](screenshots/security-group-redacted.png)
+
+### SSH Connection Wizard
+
+![SSH Connection Wizard](screenshots/ssh-connection-wizard-redacted.png)
+
+### OpenVPN Admin Login
+
+![OpenVPN Admin Login](screenshots/openvpn-admin-login-redacted.png)
+
+### OpenVPN Client Connected
+
+![OpenVPN Client Connected](screenshots/openvpn-client-connected-redacted.png)
+
+### VPN Public IP Verification
+
+![VPN Public IP Verification](screenshots/ip-verification-redacted.png)
 
 ## Repository Contents
 
@@ -80,7 +111,7 @@ For a fuller diagram, see [`diagrams/architecture.md`](diagrams/architecture.md)
 | [`docs/troubleshooting.md`](docs/troubleshooting.md) | Common issues and fixes |
 | [`docs/future-improvements.md`](docs/future-improvements.md) | Ways to improve the lab beyond the tutorial |
 | [`diagrams/architecture.md`](diagrams/architecture.md) | Text-based architecture diagram |
-| [`screenshots/README.md`](screenshots/README.md) | Checklist for evidence screenshots to add later |
+| [`screenshots/`](screenshots/) | Redacted screenshots showing lab evidence |
 
 ## Security Notes
 
@@ -104,7 +135,7 @@ Through this lab, I learned how to:
 - Connect to a cloud server using SSH key authentication
 - Configure OpenVPN Access Server through its Admin UI
 - Understand the difference between the Linux `openvpnas` user and the OpenVPN `openvpn` admin user
-- Route client internet traffic through the VPN using NAT
+- Route client internet traffic through the VPN
 - Verify VPN functionality through public IP testing
 - Identify security risks related to exposed admin portals and cloud firewall rules
 
